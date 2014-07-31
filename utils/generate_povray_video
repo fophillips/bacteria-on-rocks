@@ -1,0 +1,35 @@
+#!/bin/zsh -e
+
+SCRIPT_DIR=${0:h}
+
+ZIP=$1
+PARENT=${1:h}
+
+function generate_images_locally()
+{
+    mkdir -p ${PARENT}/images
+    unzip -d ${PARENT}/images ${ZIP}
+    for i in ${PARENT}/images/*.pov
+    do
+	/usr/bin/povray +I${i} +O${i:r}.png -D -L${PARENT}/images +A +UL +UV +FN +L/usr/share/povray-3.6/include -W780 -H780
+    done
+    rm ${PARENT}/images/*.{pov,inc}
+}
+
+function gen_image_filenames()
+{
+    ret=""
+    sep=""
+    for i in ${PARENT}/images/it*.png(n)
+    do
+	ret+="${sep}${i}"
+	sep=","
+    done
+    echo ${ret}
+}
+
+generate_images_locally
+NAMES=$(gen_image_filenames)
+echo $NAMES
+mencoder "mf://${NAMES}" -mf fps=4:type=png -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:turbo -oac copy -o ${PARENT}/images/povray.avi
+convert -delay 25 -loop 0 ${PARENT}/images/it*.png(n) ${PARENT}/images/animation.gif
