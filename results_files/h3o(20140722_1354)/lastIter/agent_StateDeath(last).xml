@@ -1,0 +1,10 @@
+<idynomics>
+ <simulation iterate="53" time="1272.0" unit="hour">
+<grid resolution="2.0" nI="129" nJ="129" nK="1"/>
+<species name="MyRock" header="family,genealogy,generation,birthday,biomass,inert,capsule,growthRate,volumeRate,locationX,locationY,locationZ,radius,totalRadius,death">
+</species>
+<species name="MyBact" header="family,genealogy,generation,birthday,biomass,inert,capsule,growthRate,volumeRate,locationX,locationY,locationZ,radius,totalRadius,death">
+</species>
+
+</simulation>
+</idynomics>

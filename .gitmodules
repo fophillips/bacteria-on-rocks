@@ -1,0 +1,10 @@
+[submodule "iDynoMiCS"]
+	path = iDynoMiCS
+	url = https://github.com/fophillips/iDynoMiCS.git
+	branch = no-move
+[submodule "utils/pyDynoMiCS"]
+	path = utils/pyDynoMiCS
+	url = https://github.com/fophillips/pyDynoMiCS.git
+[submodule "utils/reaction-diffusion"]
+	path = utils/reaction-diffusion
+	url = https://github.com/fophillips/reaction-diffusion.git

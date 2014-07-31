@@ -1,0 +1,10 @@
+<idynomics>
+ <simulation iterate="53" time="1272.0" unit="hour">
+<grid resolution="2.0" nI="129" nJ="129" nK="1"/>
+<species name="MyRock" header="population,mass,growthRate" >
+8256.0,9.359887248709309E7,-0.17487782511999705</species>
+<species name="MyBact" header="population,mass,growthRate" >
+7248.0,6147505.689955035,41435.49043747493</species>
+
+</simulation>
+</idynomics>

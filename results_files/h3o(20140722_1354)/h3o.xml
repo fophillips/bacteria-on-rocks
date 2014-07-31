@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<idynomics>
+  <simulator>
+    <param name="quietMode">false</param>
+    <param name="restartPreviousRun">false</param>
+    <param name="randomSeed">42</param>
+    <param name="outputPeriod" unit="day">1</param>
+    <timeStep>
+      <param name="adaptive">false</param>
+      <param name="timeStepIni" unit="day">1</param>
+      <param name="timeStepMin" unit="day">4</param>
+      <param name="timeStepMax" unit="day">100</param>
+      <param name="endOfSimulation" unit="day">100</param>
+    </timeStep>
+    <param name="agentTimeStep" unit="hour">1</param>
+    <param name="invComp">false</param>
+  </simulator>
+  <input>
+    <param name="useAgentFile">true</param>
+    <param name="inputAgentFileURL">generated_rock_states/current_agent_State.xml</param>
+    <param name="useBulkFile">true</param>
+    <param name="inputBulkFileURL">generated_rock_states/current_env_Sum.xml</param>
+  </input>
+  <solute domain="MyBiofilm" name="Weather">
+    <param name="diffusivity" unit="m2.day-1">1.8e-4</param>
+  </solute>
+  <solute domain="MyBiofilm" name="O2">
+    <param name="diffusivity" unit="m2.day-1">1.8e-4</param>
+  </solute>
+  <solute domain="MyBiofilm" name="pressure">
+    <param name="diffusivity" unit="m2.day-1">1</param>
+  </solute>
+  <solute domain="MyBiofilm" name="Food">
+    <param name="diffusivity" unit="m2.day-1">5.8e-5</param>
+  </solute>
+  <solute domain="MyBiofilm" name="H3O+">
+    <param name="diffusivity" unit="m2.day-1">5.8e-6</param>
+  </solute>
+  <particle name="biomass">
+    <param name="density" unit="g.L-1">200</param>
+  </particle>
+  <particle name="inert">
+    <param name="density" unit="g.L-1">200</param>
+  </particle>
+  <particle name="capsule">
+    <param name="density" unit="g.L-1">2710</param>
+  </particle>
+  <world>
+    <bulk name="MyTank">
+      <param name="isConstant">true</param>
+      <param name="D" unit="h-1">0.6</param>
+      <solute name="Weather">
+        <param name="Sbulk" unit="g.L-1">10e-3</param>
+        <param name="Sin" unit="g.L-1">10e-3</param>
+      </solute>
+      <solute name="O2">
+        <param name="Sbulk" unit="g.L-1">10e-3</param>
+        <param name="Sin" unit="g.L-1">10e-3</param>
+      </solute>
+      <solute name="pressure">
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+      </solute>
+      <solute name="Food">
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+      </solute>
+      <solute name="H3O+">
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+      </solute>
+    </bulk>
+    <computationDomain name="MyBiofilm">
+      <grid nDim="2" nI="129" nJ="129" nK="1" />
+      <param name="resolution" unit="um">2</param>
+      <param name="boundaryLayer" unit="um">40</param>
+      <param name="biofilmDiffusivity">1e-20</param>
+      <param name="specificArea" unit="m2.m-3">80</param>
+      <boundaryCondition class="BoundaryZeroFlux" name="y0z">
+        <shape class="Planar">
+          <param name="pointIn" x="-1" y="0" z="0" />
+          <param name="vectorOut" x="-1" y="0" z="0" />
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="yNz">
+        <param name="activeForSolute">yes</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="129" y="0" z="0" />
+          <param name="vectorOut" x="1" y="0" z="0" />
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryCyclic" name="x0z">
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="-1" z="0" />
+          <param name="vectorOut" x="0" y="-1" z="0" />
+        </shape>
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="129" z="0" />
+          <param name="vectorOut" x="0" y="1" z="0" />
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryCyclic" name="x0y">
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="0" z="-1" />
+          <param name="vectorOut" x="0" y="0" z="-1" />
+        </shape>
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="0" z="1" />
+          <param name="vectorOut" x="0" y="0" z="1" />
+        </shape>
+      </boundaryCondition>
+    </computationDomain>
+  </world>
+  <reaction catalyzedBy="capsule" class="ReactionFactor" name="RockGrowth">
+    <param name="muMax" unit="hour-1">0.7</param>
+    <kineticFactor class="MonodKinetic" solute="Weather">
+      <param name="Ks" unit="g.L-1">2.5e-4</param>
+    </kineticFactor>
+    <yield>
+      <param name="Weather" unit="g.g-1">-2.27</param>
+      <param name="capsule" unit="g.g-1">1</param>
+    </yield>
+  </reaction>
+  <reaction catalyzedBy="capsule" class="ReactionFactor" name="RockDegradation">
+    <param name="muMax" unit="second-1">1</param>
+    <kineticFactor class="LinearKinetic" solute="Weather">
+      <param name="K" unit="g.L-1">3.39e-11</param>
+    </kineticFactor>
+    <yield>
+      <param name="Weather" unit="g.g-1">-1</param>
+      <param name="capsule" unit="g.g-1">-1</param>
+      <param name="Food" unit="g.g-1">1e-7</param>
+    </yield>
+  </reaction>
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="EatFood">
+    <param name="muMax" unit="day-1">5.52</param>
+    <kineticFactor class="MonodKinetic" solute="Food">
+      <param name="Ks" unit="g.L-1">0.05e-6</param>
+    </kineticFactor>
+    <kineticFactor class="MonodKinetic" solute="O2">
+      <param name="Ks" unit="g.L-1">0.5e-3</param>
+    </kineticFactor>
+    <kineticFactor class="SimpleInhibition" solute="H3O+">
+      <param name="Ki" unit="g.L-1">9.5e-5</param>
+    </kineticFactor>
+    <yield>
+      <param name="O2" unit="g.g-1">-0.578</param>
+      <param name="Food" unit="g.g-1">-1.46e-4</param>
+      <param name="H3O+" unit="g.g-1">0.174</param>
+      <param name="biomass" unit="g.g-1">1.0</param>
+    </yield>
+  </reaction>
+  <reaction catalyzedBy="capsule" class="AcidReactionFactor" name="DissolveRock">
+    <param name="muMax" unit="s-1">1</param>
+    <kineticFactor class="AcidKinetic" solute="H3O+">
+      <param name="kH" unit="mol.m-2.s-1">588</param>
+      <param name="nH">1.16</param>
+      <param name="Ea" unit="J.mol-1">47500</param>
+      <param name="acidMolarMass" unit="g.mol-1">19</param>
+      <param name="ironMolarMass" unit="g.mol-1">224</param>
+      <param name="T" unit="K">300</param>
+    </kineticFactor>
+    <yield>
+      <param name="capsule" unit="g.g-1">-1</param>
+      <param name="H3O+" unit="g.g-1">-6</param>
+      <param name="Food" unit="g.g-1">1e17</param>
+    </yield>
+  </reaction>
+  <reaction catalyzedBy="capsule" class="ReactionFactor" name="DegradeFood">
+    <param name="muMax" unit="day-1">1</param>
+    <kineticFactor class="LinearKinetic" solute="Food">
+      <param name="K" unit="g.L-1">1</param>
+    </kineticFactor>
+    <yield>
+      <param name="Food" unit="g.g-1">-1</param>
+    </yield>
+  </reaction>
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="Starvation">
+    <param name="muMax" unit="day-1">2e-2</param>
+    <kineticFactor class="FirstOrderKinetic" />
+    <yield>
+      <param name="biomass" unit="g.g-1">-1</param>
+    </yield>
+  </reaction>
+  <solver class="Solver_multigrid" name="solutes" domain="MyBiofilm">
+    <param name="active">true</param>
+    <param name="preStep">150</param>
+    <param name="postStep">150</param>
+    <param name="coarseStep">1500</param>
+    <param name="nCycles">5</param>
+    <reaction name="RockGrowth" />
+    <reaction name="RockDegradation" />
+    <reaction name="EatFood" />
+    <reaction name="DissolveRock" />
+    <reaction name="DegradeFood" />
+    <reaction name="Starvation" />
+  </solver>
+  <solver class="Solver_pressure" name="pressure" domain="MyBiofilm">
+    <param name="active">true</param>
+  </solver>
+  <agentGrid>
+    <param name="computationDomain">MyBiofilm</param>
+    <param name="resolution" unit="um">2</param>
+    <detachment class="DS_Quadratic">
+      <param name="kDet" unit="um-1.hour-1">0</param>
+      <param name="maxTh" unit="um">256</param>
+    </detachment>
+    <param name="sloughDetachedBiomass">true</param>
+    <param name="shovingMaxNodes">2e6</param>
+    <param name="shovingFraction">0.025</param>
+    <param name="shovingMaxIter">1000</param>
+    <param name="shovingMutual">true</param>
+  </agentGrid>
+  <species class="ParticulateEPS" name="MyRock">
+    <particle name="capsule">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">blue</param>
+    <param name="computationDomain">MyBiofilm</param>
+    <param name="divRadius" unit="um">1</param>
+    <param name="divRadiusCV">0</param>
+    <param name="deathRadius" unit="um">0.2</param>
+    <param name="deathRadiusCV">0.1</param>
+    <param name="babyMassFrac">0.5</param>
+    <param name="babyMassFracCV">0.05</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0.</param>
+    <param name="diffusivity">1e-20</param>
+    <reaction name="RockDegradation" status="active" />
+    <reaction name="DissolveRock" status="active" />
+    <reaction name="DegradeFood" status="active" />
+    <initArea number="0">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="0" y="0" z="0" />
+      <coordinates x="1" y="258" z="0" />
+    </initArea>
+  </species>
+  <species class="Bacterium" name="MyBact">
+    <particle name="biomass">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">green</param>
+    <param name="computationDomain">MyBiofilm</param>
+    <param name="divRadius" unit="um">1</param>
+    <param name="divRadiusCV">0.1</param>
+    <param name="deathRadius">0.2</param>
+    <param name="deathRadiusCV">0.1</param>
+    <param name="babyMassFrac">0.5</param>
+	<param name="babyMassFracCV">0.05</param>
+	<param name="shoveFactor" unit="um">1.15</param>
+	<param name="shoveLimit" unit="um">0.</param>
+    <param name="diffusivity">0.8</param>
+    <reaction name="EatFood" status="active" />
+    <reaction name="Starvation" status="inactive" />
+    <initArea number="0">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="128" y="0" z="0" />
+      <coordinates x="128" y="258" z="0" />
+    </initArea>
+  </species>
+</idynomics>

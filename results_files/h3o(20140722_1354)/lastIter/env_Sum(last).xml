@@ -1,0 +1,29 @@
+<idynomics>
+ <simulation iterate="53" time="1272.0" unit="hour">
+<thickness domain="MyBiofilm" unit="um">
+	<mean>181.02055800293687</mean>
+	<stddev>31.50227160510618</stddev>
+	<max>237.0</max>
+</thickness>
+<globalProductionRate>
+<solute name="Weather" unit="g.hour">
+-3.877667824348714E-8</solute><solute name="O2" unit="g.hour">
+-3.5416090844697594</solute><solute name="pressure" unit="g.hour">
+0.0</solute><solute name="Food" unit="g.hour">
+1.8961804656193762E11</solute><solute name="H3O+" unit="g.hour">
+1.0661477590724626</solute></globalProductionRate>
+<bulk name="MyTank">
+<solute name="Weather" unit="g.L-1">0.01</solute>
+<solute name="O2" unit="g.L-1">0.01</solute>
+<solute name="pressure" unit="g.L-1">0.0</solute>
+<solute name="Food" unit="g.L-1">0.0</solute>
+<solute name="H3O+" unit="g.L-1">0.0</solute>
+<uptake_rate name="Weather" unit="g.L-1.hour-1">0.0</uptake_rate>
+<uptake_rate name="O2" unit="g.L-1.hour-1">0.0</uptake_rate>
+<uptake_rate name="pressure" unit="g.L-1.hour-1">0.0</uptake_rate>
+<uptake_rate name="Food" unit="g.L-1.hour-1">0.0</uptake_rate>
+<uptake_rate name="H3O+" unit="g.L-1.hour-1">0.0</uptake_rate>
+</bulk>
+
+</simulation>
+</idynomics>
