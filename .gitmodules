@@ -1,7 +1,7 @@
 [submodule "iDynoMiCS"]
 	path = iDynoMiCS
 	url = https://github.com/fophillips/iDynoMiCS.git
-	branch = no-move
+	branch = no-merge
 [submodule "utils/pyDynoMiCS"]
 	path = utils/pyDynoMiCS
 	url = https://github.com/fophillips/pyDynoMiCS.git
